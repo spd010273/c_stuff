@@ -46,6 +46,7 @@ int main( void )
     int *         d    = NULL;
     int *         e    = NULL;
     int *         f    = NULL;
+    void *        val  = NULL;
 
     a = calloc( 1, sizeof( int ) );
     b = calloc( 1, sizeof( int ) );
@@ -72,10 +73,13 @@ int main( void )
     *b = 1;
     *c = 12;
     *d = 9;
-    *e = 2;
+    *e = 1;
     *f = 100;
-
+    
+#ifdef SLPQ_DEBUG
     _slpq_setup_debug( head, &debug_function );
+#endif // SLPQ_DEBUG
+
 
     slpq_push( head, (void *) a );
     slpq_push( head, (void *) b );
@@ -84,15 +88,18 @@ int main( void )
     slpq_push( head, (void *) e );
     slpq_push( head, (void *) f );
 
+#ifdef SLPQ_DEBUG
     _slpq_debug( head );
-    free_slpq( head );
+#endif // SLPQ_DEBUG
 
-    if( head != NULL )
+    while( !slpq_empty( head ) )
     {
-        printf( "Failed to free head\n" );
-        return -1;
+        val = slpq_pop( head );
+        printf( "Node %p val %d\n", val, (*(int *) val) );
     }
 
+    free_slpq( head );
+    
     free( a );
     free( b );
     free( c );

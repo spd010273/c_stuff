@@ -1,3 +1,46 @@
+/*
+ *    Copyright 2018 Chris Autry
+ *
+ *    Permission is hereby granted, free of charge, to any person obtaining a copy of
+ *    this software and associated documentation files (the "Software"), to deal in
+ *    the Software without restriction, including without limitation the rights to
+ *    use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ *    the Software, and to permit persons to whom the Software is furnished to do so,
+ *    subject to the following conditions:
+ *
+ *    The above copyright notice and this permission notice shall be included in all
+ *    copies or substantial portions of the Software.
+ *
+ *    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ *    FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ *    COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ *    IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ *    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+
+/*
+ *  slpq.c - Abstracted Single Linked Priority Queue
+ *
+ *  Generic Priority Queue
+ *
+ *  Usage:
+ *      Provide a comparison function with the following prototype:
+ *          bool function( void * a, void * b )
+ *      that returns true when a should be prioritized before b
+ *
+ *  Example:
+ *      bool less_than( void * a, void * b ) implementing the < comparison
+ *      operation would order the priority queue in ascending order, starting
+ *      from the head.
+ *
+ *  Time Complexity:
+ *
+ *  pop: O(1)
+ *  push: O(n)
+ */
+
 #include "slpq.h"
 
 struct slpq * new_slpq( bool (*compare_function)( void *, void * ) )
@@ -10,7 +53,7 @@ struct slpq * new_slpq( bool (*compare_function)( void *, void * ) )
         return NULL;
     }
 
-    new_head = __ALLOC( sizeof( struct slpq ) );
+    new_head = ( struct slpq * ) __ALLOC( sizeof( struct slpq ) );
 
     if( new_head == NULL )
     {
@@ -42,44 +85,43 @@ void free_slpq( struct slpq * head )
         last = node;
         node = node->next;
         __FREE( last );
-        last = NULL;
     }
 
+    head->size = 0;
+
     __FREE( head );
-    head = NULL;
 
     return;
 }
 
-unsigned int slpq_size( struct slpq * head )
+inline unsigned int slpq_size( struct slpq * head )
 {
-    unsigned int       index = 0;
-    struct slpq_node * node  = NULL;
+    return ( head == NULL ) ? 0 : head->size;
+}
+
+inline bool slpq_empty( struct slpq * head )
+{
+    return ( head == NULL || head->head == NULL ) ? true : false;
+}
+
+inline void * slpq_pop( struct slpq * head )
+{
+    struct slpq_node * node = NULL;
+    void *             data = NULL;
 
     if( slpq_empty( head ) )
     {
-        return 0;
+        return NULL;
     }
 
-    node = head->head;
+    node       = head->head;
+    data       = node->data;
+    head->head = node->next;
 
-    while( node->next != NULL )
-    {
-        node = node->next;
-        index++;
-    }
+    __FREE( node );
+    node = NULL;
 
-    return index;
-}
-
-bool slpq_empty( struct slpq * head )
-{
-    if( head == NULL || head->head == NULL )
-    {
-        return true;
-    }
-
-    return false;
+    return data;
 }
 
 void slpq_push( struct slpq * head, void * data )
@@ -112,6 +154,7 @@ void slpq_push( struct slpq * head, void * data )
     }
 
     node = head->head;
+
     // Handle possible head replacement
     if( head->compare_function( new_node->data, node->data ) )
     {
@@ -149,26 +192,6 @@ void slpq_push( struct slpq * head, void * data )
     head->size++;
 
     return;
-}
-
-void * slpq_pop( struct slpq * head )
-{
-    struct slpq_node * node = NULL;
-    void *             data = NULL;
-
-    if( slpq_empty( head ) )
-    {
-        return NULL;
-    }
-
-    node       = head->head;
-    data       = node->data;
-    head->head = node->next;
-
-    __FREE( node );
-    node = NULL;
-
-    return data;
 }
 
 #ifdef SLPQ_DEBUG
