@@ -101,7 +101,7 @@ inline unsigned int slpq_size( struct slpq * head )
 
 inline bool slpq_empty( struct slpq * head )
 {
-    return ( head == NULL || head->head == NULL ) ? true : false;
+    return ( head == NULL || head->head == NULL || head->size == 0 ) ? true : false;
 }
 
 inline void * slpq_pop( struct slpq * head )
@@ -118,6 +118,7 @@ inline void * slpq_pop( struct slpq * head )
     data       = node->data;
     head->head = node->next;
 
+    head->size--;
     __FREE( node );
     node = NULL;
 

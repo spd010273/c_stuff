@@ -99,6 +99,7 @@ int main( void )
     }
 
     free_slpq( head );
+    head = NULL;
     
     free( a );
     free( b );
@@ -106,6 +107,13 @@ int main( void )
     free( d );
     free( e );
     free( f );
+
+    a = NULL;
+    b = NULL;
+    c = NULL;
+    d = NULL;
+    e = NULL;
+    f = NULL;
 
     return 0;
 }

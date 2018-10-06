@@ -19,50 +19,44 @@
  *    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef SLPQ_H
-#define SLPQ_H
+#ifndef DLPQ_H
+#define DLPQ_H
 
-/*
- * Minimum includes for default memory management and logging macros
- *
- * Uncomment if you are rolling your own
- */
-
-#include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
-#define __ALLOC(size) calloc(1,size)
-#define __FREE(ptr) free(ptr)
-#define __REALLOC(ptr,size) realloc(ptr,size)
-#define __LOG(msg,...) printf(msg,__VA_ARGS__)
+//#define DLPQ_DEBUG true
 
-//#define SLPQ_DEBUG true
+#define _ALLOC(size) calloc(1,size)
+#define _FREE(ptr) free(ptr)
+#define _LOG(msg,args...) printf(msg,args)
 
-struct slpq_node {
-    void * data;
-    struct slpq_node * next;
+struct dlpq_node {
+    void * value;
+    struct dlpq_node * next;
+    struct dlpq_node * prev;
 };
 
-struct slpq {
-    struct slpq_node * head;
+struct dlpq {
+    struct dlpq_node * first; // list of tree roots
+    struct dlpq_node * last;
     unsigned int size;
-    bool (*compare_function)( void *, void * );
-#ifdef SLPQ_DEBUG
-    void (*__debug_function)( void * );
-#endif // SLPQ_DEBUG
+    bool (*compare)( void *, void * );
+#ifdef DLPQ_DEBUG
+    void (*__dump_function)( void * ); // Debug object dumper
+#endif // DLPQ_DEBUG
 };
 
-extern struct slpq * new_slpq( bool (*)( void *, void * ) );
-extern void free_slpq( struct slpq * );
-extern inline unsigned int slpq_size( struct slpq * ) __attribute__((always_inline));
-extern inline bool slpq_empty( struct slpq * ) __attribute__((always_inline));
-extern inline void * slpq_pop( struct slpq * ) __attribute__((always_inline));
-extern void slpq_push( struct slpq *, void * );
-
-#ifdef SLPQ_DEBUG
-extern void _slpq_debug( struct slpq * );
-extern void _slpq_setup_debug( struct slpq *, void (*)( void * ) );
-#endif // SLPQ_DEBUG
-
-#endif // SLPQ_H
+extern struct dlpq * new_dlpq( bool (*)( void *, void * ) );
+extern inline unsigned int dlpq_size( struct dlpq * ) __attribute__((always_inline));
+extern inline bool dlpq_empty( struct dlpq * ) __attribute__((always_inline));
+extern void dlpq_push( struct dlpq * head, void * data );
+extern inline void * dlpq_pop( struct dlpq * ) __attribute__((always_inline));
+extern inline void * dlpq_unshift( struct dlpq * ) __attribute__((always_inline));
+extern void free_dlpq( struct dlpq * );
+#ifdef DLPQ_DEBUG
+extern void _dlpq_debug( struct dlpq * );
+extern void _dlpq_setup_debug( struct dlpq *, void (*)( void * ) );
+#endif // DLPQ_DEBUG
+#endif // DLPQ_H
