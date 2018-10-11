@@ -54,7 +54,7 @@ extern inline bool dlpq_empty( struct dlpq * ) __attribute__((always_inline));
 extern void dlpq_push( struct dlpq * head, void * data );
 extern inline void * dlpq_pop( struct dlpq * ) __attribute__((always_inline));
 extern inline void * dlpq_unshift( struct dlpq * ) __attribute__((always_inline));
-extern void free_dlpq( struct dlpq * );
+extern void free_dlpq( struct dlpq ** );
 #ifdef DLPQ_DEBUG
 extern void _dlpq_debug( struct dlpq * );
 extern void _dlpq_setup_debug( struct dlpq *, void (*)( void * ) );

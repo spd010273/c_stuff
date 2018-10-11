@@ -213,22 +213,22 @@ inline void * fifoq_peek_back( struct fifoq * head )
     return head->last->data;
 }
 
-void free_fifoq( struct fifoq * head )
+void free_fifoq( struct fifoq ** head )
 {
     struct fifoq_node * node = NULL;
     struct fifoq_node * last = NULL;
 
-    if( fifoq_empty( head ) )
+    if( fifoq_empty( (*head) ) )
     {
-        if( head != NULL )
+        if( (*head) != NULL )
         {
-            _FREE( head );
+            _FREE( (*head) );
         }
 
         return;
     }
 
-    node = head->first;
+    node = (*head)->first;
 
     while( node != NULL )
     {
@@ -237,6 +237,7 @@ void free_fifoq( struct fifoq * head )
         _FREE( last );
     }
 
-    _FREE( head );
+    _FREE( (*head) );
+    (*head) = NULL;
     return;
 }

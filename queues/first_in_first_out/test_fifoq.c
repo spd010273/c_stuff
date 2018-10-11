@@ -74,6 +74,6 @@ int main()
         ind++;
     }
 
-    free_fifoq( head );
+    free_fifoq( (struct fifoq ** ) &head );
     return 0;
 }

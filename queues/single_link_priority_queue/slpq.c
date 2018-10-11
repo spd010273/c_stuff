@@ -68,17 +68,17 @@ struct slpq * new_slpq( bool (*compare_function)( void *, void * ) )
     return new_head;
 }
 
-void free_slpq( struct slpq * head )
+void free_slpq( struct slpq ** head )
 {
     struct slpq_node * node = NULL;
     struct slpq_node * last = NULL;
 
-    if( head == NULL )
+    if( (*head) == NULL )
     {
         return;
     }
 
-    node = head->head;
+    node = (*head)->head;
 
     while( node != NULL )
     {
@@ -87,10 +87,10 @@ void free_slpq( struct slpq * head )
         __FREE( last );
     }
 
-    head->size = 0;
+    (*head)->size = 0;
 
-    __FREE( head );
-
+    __FREE( (*head) );
+    (*head) = NULL;
     return;
 }
 

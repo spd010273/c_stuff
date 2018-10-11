@@ -119,7 +119,7 @@ int main( void )
         printf( "Node %p val %d\n", val, (*(int *) val) );
     }
 
-    free_slpq( head );
+    free_slpq( (struct slpq **) &head );
     head = NULL;
     
     free( a );

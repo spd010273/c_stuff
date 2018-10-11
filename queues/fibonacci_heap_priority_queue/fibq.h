@@ -19,14 +19,8 @@
  *    CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef SLPQ_H
-#define SLPQ_H
-
-/*
- * Minimum includes for default memory management and logging macros
- *
- * Uncomment if you are rolling your own
- */
+#ifndef FIBQ_H
+#define FIBQ_H
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -37,32 +31,33 @@
 #define __REALLOC(ptr,size) realloc(ptr,size)
 #define __LOG(msg,...) printf(msg,__VA_ARGS__)
 
-//#define SLPQ_DEBUG true
+//#define FIBQ_DEBUG true
 
-struct slpq_node {
+struct fibq_node {
     void * data;
-    struct slpq_node * next;
+    unsigned int rank;
+    bool marked;
+    struct fibq_node * child;
+    struct fibq_node * left;
+    struct fibq_node * right;
+    struct fibq_node * parent;
 };
 
-struct slpq {
-    struct slpq_node * head;
-    unsigned int size;
+struct fibq {
+    struct fibq_node ** heap;
     bool (*compare_function)( void *, void * );
-#ifdef SLPQ_DEBUG
     void (*__debug_function)( void * );
-#endif // SLPQ_DEBUG
+    struct fibq_node * min_node;
+    void * min_val;
+    unsigned int node_count;
+    unsigned int mark_count;
+    unsigned int heap_size;
 };
 
-extern struct slpq * new_slpq( bool (*)( void *, void * ) );
-extern void free_slpq( struct slpq ** );
-extern inline unsigned int slpq_size( struct slpq * ) __attribute__((always_inline));
-extern inline bool slpq_empty( struct slpq * ) __attribute__((always_inline));
-extern inline void * slpq_pop( struct slpq * ) __attribute__((always_inline));
-extern void slpq_push( struct slpq *, void * );
 
-#ifdef SLPQ_DEBUG
-extern void _slpq_debug( struct slpq * );
-extern void _slpq_setup_debug( struct slpq *, void (*)( void * ) );
-#endif // SLPQ_DEBUG
-
-#endif // SLPQ_H
+extern struct fibq * new_fibq( bool (*)( void *, void * ) );
+void _free_fibq_node( struct fibq_node * );
+extern void free_fibq( struct fibq * );
+extern void fibq_insert( struct fibq *, void * );
+extern struct fibq * fibq_merge( struct fibq *, struct fibq * );
+#endif // FIBQ_H

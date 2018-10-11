@@ -51,6 +51,6 @@ extern inline void * fifoq_pop( struct fifoq * ) __attribute__((always_inline));
 extern inline void * fifoq_peek( struct fifoq * ) __attribute__((always_inline));
 extern inline void * fifoq_pop_back( struct fifoq * ) __attribute__((always_inline));
 extern inline void * fifoq_peek_back( struct fifoq * ) __attribute__((always_inline));
-extern void free_fifoq( struct fifoq * );
+extern void free_fifoq( struct fifoq ** );
 
 #endif // FIFOQ_H

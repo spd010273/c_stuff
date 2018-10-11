@@ -74,7 +74,7 @@ int main( void )
     _dlpq_setup_debug( head, &dumper );
     _dlpq_debug( head );
 #endif // DLPQ_DEBUG
-    free_dlpq( head );
+    free_dlpq( ( struct dlpq ** ) &head );
     head = NULL;
 
     return 0;

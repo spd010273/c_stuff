@@ -173,19 +173,24 @@ inline void * dlpq_unshift( struct dlpq * head )
     return data;
 }
 
-void free_dlpq( struct dlpq * head )
+void free_dlpq( struct dlpq ** head )
 {
     struct dlpq_node * next_node = NULL;
 
-    if( dlpq_empty( head ) )
+    if( *head == NULL )
     {
-        _FREE( head );
         return;
     }
 
-    next_node = head->last;
+    if( dlpq_empty( *head ) && (*head) != NULL )
+    {
+        _FREE( *head );
+        return;
+    }
 
-    while( next_node != head->first )
+    next_node = (*head)->last;
+
+    while( next_node != (*head)->first )
     {
         next_node = next_node->prev;
         _FREE( next_node->next );
@@ -196,7 +201,8 @@ void free_dlpq( struct dlpq * head )
         _FREE( next_node );
     }
 
-    _FREE( head );
+    _FREE( (*head) );
+    (*head) = NULL;
     return;
 }
 
