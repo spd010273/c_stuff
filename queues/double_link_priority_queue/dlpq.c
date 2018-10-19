@@ -144,7 +144,10 @@ inline void * dlpq_pop( struct dlpq * head )
     temp        = head->first;
     data        = temp->value;
     head->first = temp->next;
-
+    if( head->first != NULL )
+    {
+        head->first->prev = NULL;
+    }
     _FREE( temp );
 
     return data;
@@ -166,7 +169,10 @@ inline void * dlpq_unshift( struct dlpq * head )
     temp       = head->last;
     data       = temp->value;
     head->last = temp->prev;
-
+    if( head->last != NULL )
+    {
+        head->last->next = NULL;
+    }
     _FREE( temp );
     temp = NULL;
 
@@ -221,7 +227,6 @@ void _dlpq_setup_debug( struct dlpq * head, void (*debug)( void * ) )
 
 void _dlpq_debug( struct dlpq * head )
 {
-    void *             data  = NULL;
     struct dlpq_node * temp  = NULL;
     unsigned int       index = 0;
 

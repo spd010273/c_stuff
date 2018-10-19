@@ -59,8 +59,10 @@ sub _connect()
 
 sub _restart_server()
 {
-    system( 'systemctl restart postgresql-9.6' );
-    sleep(1);
+    unless( system( 'systemctl restart postgresql-9.6' ) )
+    {
+        sleep(10);
+    }
     $handle = _connect();
 }
 
