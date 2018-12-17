@@ -25,7 +25,7 @@ int main( void )
     char *           source_string     = NULL;
     size_t           source_size       = 0;
 
-    fp = fopen( filename, "R" );
+    fp = fopen( filename, "r" );
 
     if( !fp )
     {
@@ -43,13 +43,17 @@ int main( void )
 
     if( ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to enumerate OpenCL Platforms" );
+        fprintf(
+            stderr,
+            "Failed to enumerate OpenCL Platforms: %s\n",
+            ret == CL_INVALID_VALUE ? "CL_INVALID_VALUE" : "Unknwon Error"
+        );
         exit( 1 );
     }
 
     if( ret_num_platforms == 0 )
     {
-        fprintf( stdout, "No OpenCL Platforms present in system" );
+        fprintf( stdout, "No OpenCL Platforms present in system\n" );
         exit( 0 );
     }
 
@@ -57,13 +61,13 @@ int main( void )
     
     if( ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to enumerate OpenCL Devices" );
+        fprintf( stderr, "Failed to enumerate OpenCL Devices\n" );
         exit( 1 );
     }
 
     if( ret_num_devices == 0 )
     {
-        fprintf( stdout, "No OpenCL Devices present in system" );
+        fprintf( stdout, "No OpenCL Devices present in system\n" );
         exit( 0 );
     }
 
@@ -71,7 +75,7 @@ int main( void )
 
     if( context == NULL || ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to create OpenCL context on device ID %p", device_id );
+        fprintf( stderr, "Failed to create OpenCL context on device ID %p\n", device_id );
         exit( 1 );
     }
 
@@ -79,7 +83,7 @@ int main( void )
 
     if( command_queue == NULL || ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to setup OpenCL Command queue on device ID %p", device_id );
+        fprintf( stderr, "Failed to setup OpenCL Command queue on device ID %p\n", device_id );
         exit( 1 );
     }
 
@@ -87,7 +91,7 @@ int main( void )
 
     if( memobj == NULL || ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to create OpenCL memory allocation" );
+        fprintf( stderr, "Failed to create OpenCL memory allocation\n" );
         exit( 1 );
     }
 
@@ -95,7 +99,7 @@ int main( void )
 
     if( program == NULL || ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to create OpenCL program" );
+        fprintf( stderr, "Failed to create OpenCL program\n" );
         exit( 1 );
     }
 
@@ -103,7 +107,7 @@ int main( void )
 
     if( ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to build OpenCL program" );
+        fprintf( stderr, "Failed to build OpenCL program\n" );
         exit( 1 );
     }
 
@@ -111,7 +115,17 @@ int main( void )
 
     if( kernel == NULL || ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to create OpenCL kernel" );
+        fprintf(
+            stderr,
+            "Failed to create OpenCL kernel: %s\n",
+            ret == CL_INVALID_PROGRAM ? "CL_INVALID_PROGRAM" :
+            ret == CL_INVALID_PROGRAM_EXECUTABLE ? "CL_INVALID_PROGRAM_EXECUTABLE" :
+            ret == CL_INVALID_KERNEL_NAME ? "CL_INVALID_KERNEL_NAME" :
+            ret == CL_INVALID_KERNEL_DEFINITION ? "CL_INVALID_KERNEL_DEFINITION" :
+            ret == CL_INVALID_VALUE ? "CL_INVALID_VALUE" :
+            ret == CL_OUT_OF_HOST_MEMORY ? "CL_OUT_OF_HOST_MEMORY" : "Unknow Error"
+        );
+
         exit( 1 );
     }
 
@@ -119,7 +133,7 @@ int main( void )
 
     if( ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to setup kernel memory" );
+        fprintf( stderr, "Failed to setup kernel memory\n" );
         exit( 1 );
     }
 
@@ -127,7 +141,7 @@ int main( void )
 
     if( ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to enqueue kernel execution" );
+        fprintf( stderr, "Failed to enqueue kernel execution\n" );
         exit( 1 );
     }
 
@@ -135,7 +149,7 @@ int main( void )
 
     if( ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to read results" );
+        fprintf( stderr, "Failed to read results\n" );
         exit( 1 );
     }
 
