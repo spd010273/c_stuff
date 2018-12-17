@@ -10,14 +10,6 @@ PG_FUNCTION_INFO_V1( fn_compute_determinant );
 
 Datum fn_compute_determinant( PG_FUNCTION_ARGS )
 {
-    /*
-     * Compute the Determinant for the matrix
-     * 
-     * a c
-     * b d
-     *
-     * det = a * d - c * b
-     */
     float8 determinant = 0.0;
     float8 a = 0.0;
     float8 b = 0.0;

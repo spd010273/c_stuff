@@ -67,11 +67,7 @@ CREATE OR REPLACE FUNCTION fn_compute_determinant_plperl
 RETURNS DOUBLE PRECISION AS
  $_$
     my( $a, $b, $c, $d ) = @_;
-
-    my $determinant;
-
-    $determinant = $a * $d - $c * $b;
-
+    my $determinant = $a * $d - $c * $b;
     return $determinant;
  $_$
     LANGUAGE plperlu IMMUTABLE STRICT PARALLEL SAFE;
