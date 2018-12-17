@@ -21,7 +21,7 @@ int main( void )
 
     char             string[MEM_SIZE];
     FILE *           fp;
-    char             filename[]        = "./hello_world.cl"
+    char             filename[]        = "./hello_world.cl";
     char *           source_string     = NULL;
     size_t           source_size       = 0;
 
@@ -33,9 +33,9 @@ int main( void )
         exit( 1 );
     }
 
-    source_Str = ( char * ) malloc( MAX_SOURCE_SIZE );
+    source_string = ( char * ) malloc( MAX_SOURCE_SIZE );
 
-    source_size = fread( source_str, 1, MAX_SOURCE_SIZE, fp );
+    source_size = fread( source_string, 1, MAX_SOURCE_SIZE, fp );
 
     fclose( fp );
 
@@ -71,7 +71,7 @@ int main( void )
 
     if( context == NULL || ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to create OpenCL context on device ID %d", device_id );
+        fprintf( stderr, "Failed to create OpenCL context on device ID %p", device_id );
         exit( 1 );
     }
 
@@ -79,7 +79,7 @@ int main( void )
 
     if( command_queue == NULL || ret != CL_SUCCESS )
     {
-        fprintf( stderr, "Failed to setup OpenCL Command queue on device ID %d", device_id );
+        fprintf( stderr, "Failed to setup OpenCL Command queue on device ID %p", device_id );
         exit( 1 );
     }
 
@@ -91,7 +91,7 @@ int main( void )
         exit( 1 );
     }
 
-    program = clCreateProgramWithSource( context, 1, ( const char ** ) &source_str, ( const size_t * ) source_size, &ret );
+    program = clCreateProgramWithSource( context, 1, ( const char ** ) &source_string, ( const size_t * ) source_size, &ret );
 
     if( program == NULL || ret != CL_SUCCESS )
     {
