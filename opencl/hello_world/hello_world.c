@@ -25,7 +25,7 @@ int main( void )
     char *           source_string     = NULL;
     size_t           source_size       = 0;
 
-    fp = fopen( filename, "R" );
+    fp = fopen( filename, "r" );
 
     if( !fp )
     {
